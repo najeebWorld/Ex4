@@ -6,7 +6,8 @@ class Pokemon:
         self.value=v
         self.geo=pos
         self.edge=None
-
+    def __repr__(self):
+        return "type: "+self.type+" value: "+self.value+" geo: "+self.geo
 
     def getType(self):
         return self.type
@@ -14,7 +15,7 @@ class Pokemon:
     def getValue(self):
         return self.value
 
-    def getGeo(self):
+    def getPos(self):
         return self.geo
 
     def getEdge(self):
