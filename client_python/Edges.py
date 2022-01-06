@@ -6,7 +6,8 @@ class Edges:
         self.src = s
         self.dest = d
         self.weight = w
-
+    #
+    # def __repr__(self):
 
     def getsrc(self):
          return self.src
