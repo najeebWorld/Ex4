@@ -10,6 +10,8 @@ import pygame
 from pygame import *
 import math
 import time
+
+
 from client_python.DiGraph import DiGraph
 from client_python.GraphInterface import GraphInterface
 from client_python import client
@@ -18,16 +20,29 @@ from client_python.Pokemon import Pokemon
 from client_python.Node import Node
 from client_python.Edges import Edges
 
+# class Button:
+#     def _init_(self, color, rect: pygame.Rect):
+#         self.color = color
+#         self.rect = rect
+#         self.pressed = False
+#
+#     def press(self):
+#         self.pressed = not self.pressed
+
+
+
+
+
 class playgame:
 
     def __init__(self, g: DiGraph = None):
         if g == None:
             g = DiGraph()
-        print("first")
         self.graph = g
         self.pokD = dict()
         self.agD = dict()
         self.client = Client()
+
 
     def start_game(self) -> None:
         # default port
@@ -60,52 +75,80 @@ class playgame:
             # print("attached all")
             for agent in self.agD:
                 a1 = self.agD[agent]
+                # l = a1.getList()
+                # l0 = l[0]
                 src1 = a1.getSrc()
-                l = a1.getList()
-                l0 = l[0]
+                dest1 = a1.getDest()
                 id = a1.getId()
                 speed = a1.getSpeed()
-                if len(l) > 2:
-                    dest =a1.getDest()
-                    # del l[0]
-                    # a1.setList(l)
-                    t1 = (l0, dest)
-                    e = self.graph.edgeD.get(t1)
-                    weight = e.getweight()
-                    print(dest)
-                    self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest) + '}')
-                    ttl = self.client.time_to_end()
-                    print(ttl, self.client.get_info())
-                    timee=(weight / speed)-eps_dist
-                    time.sleep(timee)
-                    self.client.move()
-                elif len(l) == 2:
-                    t1 = (l[0], l[1])
-                    dest = a1.getDest()
-                    print(dest)
-                    e = self.graph.edgeD.get(t1)
-                    w = e.getweight()
-                    node_src = self.graph.nodeD.get(e.getsrc())
-                    node_dest = self.graph.nodeD.get(e.getdest())
-                    pok = a1.getPok()
-                    t_pok = pok.getPos()
-                    t_src = node_src.getPos()
-                    t_dest = node_dest.getPos()
-                    d1 = self.find_distance(t_src, t_dest)
-                    d2 = self.find_distance(t_src, t_pok)
-                    timee=((((d2/d1)*w)-eps_dist)/speed)
-                    self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest) + '}')
-                    ttl = self.client.time_to_end()
-                    print(ttl, self.client.get_info())
-                    time.sleep(timee)
-                    self.client.move()
-                else:
-                    self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(l0) + '}')
-                    ttl = self.client.time_to_end()
-                    print(ttl, self.client.get_info())
-                    time.sleep(0.1)
-                    self.client.move()
-                # self.client.move()
+                t1=(src1,dest1)
+                e = self.graph.edgeD.get(t1)
+                if e==None:
+                    print("not an edge")
+                weight = e.getweight()
+                self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest1) + '}')
+                ttl = self.client.time_to_end()
+                print(ttl, self.client.get_info())
+                if a1.getPok() != None:
+                    if a1.getPok().getEdge() == e:
+                        node_src = self.graph.nodeD.get(e.getsrc())
+                        node_dest = self.graph.nodeD.get(e.getdest())
+                        pok = a1.getPok()
+                        t_pok = pok.getPos()
+                        t_src = node_src.getPos()
+                        t_dest = node_dest.getPos()
+                        d1 = self.find_distance(t_src, t_dest)
+                        d2 = self.find_distance(t_src, t_pok)
+                        timee=((((d2/d1)*weight)-eps_dist)/speed)
+                        # time.sleep(timee)
+                        del self.pokD[t_pok]
+                        # self.client.move()
+                    else:
+                        timee=(weight / speed)-eps_dist
+                        # time.sleep(timee)
+                        # self.client.move()
+
+                # if len(l) > 2:
+                #     dest =a1.getDest()
+                #     # del l[0]
+                #     # a1.setList(l)
+                #     t1 = (l0, dest)
+                #     e = self.graph.edgeD.get(t1)
+                #     weight = e.getweight()
+                #     print(dest)
+                #     self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest) + '}')
+                #     ttl = self.client.time_to_end()
+                #     print(ttl, self.client.get_info())
+                #     timee=(weight / speed)-eps_dist
+                #     time.sleep(timee)
+                #     self.client.move()
+                # elif len(l) == 2:
+                #     t1 = (l[0], l[1])
+                #     dest = a1.getDest()
+                #     print(dest)
+                #     e = self.graph.edgeD.get(t1)
+                #     w = e.getweight()
+                #     node_src = self.graph.nodeD.get(e.getsrc())
+                #     node_dest = self.graph.nodeD.get(e.getdest())
+                #     pok = a1.getPok()
+                #     t_pok = pok.getPos()
+                #     t_src = node_src.getPos()
+                #     t_dest = node_dest.getPos()
+                #     d1 = self.find_distance(t_src, t_dest)
+                #     d2 = self.find_distance(t_src, t_pok)
+                #     timee=((((d2/d1)*w)-eps_dist)/speed)
+                #     self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest) + '}')
+                #     ttl = self.client.time_to_end()
+                #     print(ttl, self.client.get_info())
+                #     time.sleep(timee)
+                #     self.client.move()
+                # else:
+                #     self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(l0) + '}')
+                #     ttl = self.client.time_to_end()
+                #     print(ttl, self.client.get_info())
+                #     time.sleep(0.1)
+                #     self.client.move()
+                # # self.client.move()
 
             # for agent in self.agD:
             #     a1 = self.agD[agent]
@@ -336,23 +379,36 @@ class playgame:
         l = []
         for i in range(0, len(p)):
             spot = -1
+            short1=float("inf")
             for j in range(0, len(a)):
-                # ghj=a[j].getSrc()
-                # b=p[i]
-                # bn=p[i].getEdge()
-                # bnm=p[i].getEdge().getsrc()
                 d = self.shortest_path(a[j].getSrc(), p[i].getEdge().getsrc())
                 time=d[0]/a[j].getSpeed()
-                if d[0] < short1:
-                    short1 = d[0]
+                if time < short1:
+                    short1 = time
                     spot = j
                     l = d[1]
             if spot >= 0 and spot < len(a):
-                l.append(p[spot].getEdge().getdest())
-                a[spot].setList(l)
-                a[spot].setPok(p[i])
-                if(len(l)>1):
+                if len(l) == 0:
+                    # l.append(p[spot].getEdge().getsrc())
+                    # l.append(p[spot].getEdge().getdest())
+                    # a[spot].setSrc(p[spot].getEdge().getSrc())
+                    list1=l
+                    a[spot].setDest(p[i].getEdge().getdest())
+
+                elif len(l) == 1 :
+                    list2=l
+                    a[spot].setDest(p[i].getEdge().getdest())
+                elif len(l) == 2:
+                    list3 = l
                     a[spot].setDest(l[1])
+                else:
+                    # l.append(p[spot].getEdge().getdest())
+                    # a[spot].setList(l)
+                    # a[spot].setPok(p[i])
+                    list=l
+                    a[spot].setDest(l[1])
+                a[spot].setPok(p[i])
+                # a[spot].setDest(l[1])
                 del a[spot]
 
 
@@ -391,31 +447,12 @@ class playgame:
         max_x = max(list(graph.Nodes), key=lambda n: n.pos.x).pos.x
         max_y = max(list(graph.Nodes), key=lambda n: n.pos.y).pos.y
 
-        # def scale(data, min_screen, max_screen, min_data, max_data):
-        #     """
-        #     get the scaled data with proportions min_data, max_data
-        #     relative to min and max screen dimentions
-        #     """
-        #     return ((data - min_data) / (max_data - min_data)) * (max_screen - min_screen) + min_screen
-        #
-        # # decorate scale with the correct values
-        #
-        # def my_scale(data, x=False, y=False):
-        #     if x:
-        #         return scale(data, 50, screen.get_width() - 50, min_x, max_x)
-        #     if y:
-        #         return scale(data, 50, screen.get_height() - 50, min_y, max_y)
-
         radius = 15
-        #
-        # client.add_agent("{\"id\":0}")
-        # # client.add_agent("{\"id\":1}")
-        # # client.add_agent("{\"id\":2}")
-        # # client.add_agent("{\"id\":3}")
-        #
-        # # this commnad starts the server - the game is running now
-        # client.start()
 
+        # button = Button(color=(0, 0, 0), rect=pygame.Rect((10, 10), (100, 50)))
+
+        MOVE_FONT = pygame.font.SysFont('comicsans', 20)
+        radius = 15
         """
         The code below should be improved significantly:
         The GUI and the "algo" are mixed - refactoring using MVC design pattern is required.
@@ -486,7 +523,7 @@ class playgame:
 
             # refresh rate
             clock.tick(60)
-
+            self.client.move()
             # choose next edge
             # for agent in agents:
             #     if agent.dest == -1:
@@ -518,15 +555,19 @@ class playgame:
 
 
 
-
-
-
-
-
-
-
-
-
+    # MOVE_FONT = pygame.font.SysFont('comicsans', 20)
+    # radius = 15
+    #
+    #
+    #
+    # def draw_Button(self):
+    #     FONT = pygame.font.SysFont('Arial', 20, bold=True)
+    #     pygame.font.init()
+    #     pygame.draw.rect(self.screen, self.button.color, self.button.rect)
+    #     button_text = FONT.render("Exit", True, (210, 56, 23))
+    #     self.screen.blit(button_text, (self.button.rect.x + 20, self.button.rect.y + 10))
+    #
+    #
 
 
 
@@ -534,5 +575,6 @@ class playgame:
 
 
     # if __name__ == '__main__':
+    #     game = playgame()
     #     start_game()
 
