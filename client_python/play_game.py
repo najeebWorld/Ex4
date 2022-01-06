@@ -8,9 +8,10 @@ import json
 from pygame import gfxdraw
 import pygame
 from pygame import *
+import pygame_widgets
+from pygame_widgets.button import Button
 import math
 import time
-
 
 from client_python.DiGraph import DiGraph
 from client_python.GraphInterface import GraphInterface
@@ -19,6 +20,7 @@ from client_python.Agent import Agent
 from client_python.Pokemon import Pokemon
 from client_python.Node import Node
 from client_python.Edges import Edges
+
 
 # class Button:
 #     def _init_(self, color, rect: pygame.Rect):
@@ -30,9 +32,6 @@ from client_python.Edges import Edges
 #         self.pressed = not self.pressed
 
 
-
-
-
 class playgame:
 
     def __init__(self, g: DiGraph = None):
@@ -42,7 +41,6 @@ class playgame:
         self.pokD = dict()
         self.agD = dict()
         self.client = Client()
-
 
     def start_game(self) -> None:
         # default port
@@ -81,9 +79,9 @@ class playgame:
                 dest1 = a1.getDest()
                 id = a1.getId()
                 speed = a1.getSpeed()
-                t1=(src1,dest1)
+                t1 = (src1, dest1)
                 e = self.graph.edgeD.get(t1)
-                if e==None:
+                if e == None:
                     print("not an edge")
                 weight = e.getweight()
                 self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest1) + '}')
@@ -99,12 +97,12 @@ class playgame:
                         t_dest = node_dest.getPos()
                         d1 = self.find_distance(t_src, t_dest)
                         d2 = self.find_distance(t_src, t_pok)
-                        timee=((((d2/d1)*weight)-eps_dist)/speed)
+                        timee = ((((d2 / d1) * weight) - eps_dist) / speed)
                         # time.sleep(timee)
                         del self.pokD[t_pok]
                         # self.client.move()
                     else:
-                        timee=(weight / speed)-eps_dist
+                        timee = (weight / speed) - eps_dist
                         # time.sleep(timee)
                         # self.client.move()
 
@@ -352,7 +350,7 @@ class playgame:
                 d2 = self.find_distance(t1, t3)
                 d3 = self.find_distance(t3, t2)
                 if (d2 + d3 < d1 + eps) and (d2 + d3 > d1 - eps):
-                    if (n2-n1 > 0 and p.getType() > 0) or (n2 - n1 < 0 and p.getType() < 0):
+                    if (n2 - n1 > 0 and p.getType() > 0) or (n2 - n1 < 0 and p.getType() < 0):
                         found = True
                         p.setEdge(e1)
                     else:
@@ -379,10 +377,10 @@ class playgame:
         l = []
         for i in range(0, len(p)):
             spot = -1
-            short1=float("inf")
+            short1 = float("inf")
             for j in range(0, len(a)):
                 d = self.shortest_path(a[j].getSrc(), p[i].getEdge().getsrc())
-                time=d[0]/a[j].getSpeed()
+                time = d[0] / a[j].getSpeed()
                 if time < short1:
                     short1 = time
                     spot = j
@@ -392,11 +390,11 @@ class playgame:
                     # l.append(p[spot].getEdge().getsrc())
                     # l.append(p[spot].getEdge().getdest())
                     # a[spot].setSrc(p[spot].getEdge().getSrc())
-                    list1=l
+                    list1 = l
                     a[spot].setDest(p[i].getEdge().getdest())
 
-                elif len(l) == 1 :
-                    list2=l
+                elif len(l) == 1:
+                    list2 = l
                     a[spot].setDest(p[i].getEdge().getdest())
                 elif len(l) == 2:
                     list3 = l
@@ -405,16 +403,11 @@ class playgame:
                     # l.append(p[spot].getEdge().getdest())
                     # a[spot].setList(l)
                     # a[spot].setPok(p[i])
-                    list=l
+                    list = l
                     a[spot].setDest(l[1])
                 a[spot].setPok(p[i])
                 # a[spot].setDest(l[1])
                 del a[spot]
-
-
-
-
-
 
     def run_Gui(self):
 
@@ -464,27 +457,59 @@ class playgame:
         pokemons = [p.Pokemon for p in pokemons]
         for p in pokemons:
             x, y, _ = p.pos.split(',')
-            p.pos = SimpleNamespace(x=self.my_scale(float(x),screen, min_x,max_x,min_y,max_y, x=True), y=self.my_scale(float(y),screen, min_x,max_x,min_y,max_y, y=True))
-            agents = json.loads(self.client.get_agents(),object_hook=lambda d: SimpleNamespace(**d)).Agents
+            p.pos = SimpleNamespace(x=self.my_scale(float(x), screen, min_x, max_x, min_y, max_y, x=True),
+                                    y=self.my_scale(float(y), screen, min_x, max_x, min_y, max_y, y=True))
+            agents = json.loads(self.client.get_agents(), object_hook=lambda d: SimpleNamespace(**d)).Agents
             agents = [agent.Agent for agent in agents]
         for a in agents:
             x, y, _ = a.pos.split(',')
-            a.pos = SimpleNamespace(x=self.my_scale(float(x),screen, min_x,max_x,min_y,max_y, x=True), y=self.my_scale(float(y),screen, min_x,max_x,min_y,max_y, y=True))
+            a.pos = SimpleNamespace(x=self.my_scale(float(x), screen, min_x, max_x, min_y, max_y, x=True),
+                                    y=self.my_scale(float(y), screen, min_x, max_x, min_y, max_y, y=True))
         # check events
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
-                 pygame.quit()
-                 exit(0)
+                pygame.quit()
+                exit(0)
+
+        stopButton = Button(
+            screen, 0, 0, 100, 40, text="press to stop",
+            fontSize=20, margin=5,
+            inactiveColour=(255, 255, 255),
+            pressedColour=(70, 70, 70), radius=0,
+            onClick=lambda: self.client.stop()
+        )
 
         # refresh surface
-        screen.fill(Color(0, 0, 0))
+        screen.fill(Color(50, 50, 0))
+
+
+        # add moves, time and score to screen
+
+        longString = self.client.get_info().split(",")
+        timeToLive = self.client.time_to_end()
+        score = longString[3].split(":")[1]
+        moves = longString[2].split(":")[1]
+
+        pygame.font.init()
+        font = pygame.font.SysFont("Arial", 20)
+
+        textTime = font.render("time left: " + str(timeToLive),True,(255,255,255))
+        screen.blit(textTime, (100,0))
+
+        textScore = font.render("score: " + str(score), True, (255, 255, 255))
+        screen.blit(textScore, (400, 0))
+
+        textMoves = font.render("move: " + str(moves), True, (255, 255, 255))
+        screen.blit(textMoves, (600, 0))
+
 
         # draw nodes
         for n in graph.Nodes:
-            x = self.my_scale(n.pos.x, screen, min_x,max_x,min_y,max_y,x=True)
-            y = self.my_scale(n.pos.y,screen, min_x,max_x,min_y,max_y, y=True)
+            x = self.my_scale(n.pos.x, screen, min_x, max_x, min_y, max_y, x=True)
+            y = self.my_scale(n.pos.y, screen, min_x, max_x, min_y, max_y, y=True)
 
-        # its just to get a nice antialiased circle
+            # its just to get a nice antialiased circle
             gfxdraw.filled_circle(screen, int(x), int(y), radius, Color(64, 80, 174))
             gfxdraw.aacircle(screen, int(x), int(y), radius, Color(255, 255, 255))
 
@@ -500,17 +525,17 @@ class playgame:
             dest = next(n for n in graph.Nodes if n.id == e.dest)
 
             # scaled positions
-            src_x = self.my_scale(src.pos.x,screen, min_x,max_x,min_y,max_y, x=True)
-            src_y = self.my_scale(src.pos.y,screen, min_x,max_x,min_y,max_y, y=True)
-            dest_x = self.my_scale(dest.pos.x,screen, min_x,max_x,min_y,max_y, x=True)
-            dest_y = self.my_scale(dest.pos.y,screen, min_x,max_x,min_y,max_y, y=True)
+            src_x = self.my_scale(src.pos.x, screen, min_x, max_x, min_y, max_y, x=True)
+            src_y = self.my_scale(src.pos.y, screen, min_x, max_x, min_y, max_y, y=True)
+            dest_x = self.my_scale(dest.pos.x, screen, min_x, max_x, min_y, max_y, x=True)
+            dest_y = self.my_scale(dest.pos.y, screen, min_x, max_x, min_y, max_y, y=True)
 
             # draw the line
-            pygame.draw.line(screen, Color(61, 72, 126),(src_x, src_y), (dest_x, dest_y))
+            pygame.draw.line(screen, Color(61, 72, 126), (src_x, src_y), (dest_x, dest_y))
 
             # draw agents
         for agent in agents:
-            pygame.draw.circle(screen, Color(122, 61, 23),(int(agent.pos.x), int(agent.pos.y)), 10)
+            pygame.draw.circle(screen, Color(122, 61, 23), (int(agent.pos.x), int(agent.pos.y)), 10)
             # draw pokemons (note: should differ (GUI wise) between the up and the down pokemons (currently they are marked in the same way).
         for p in pokemons:
             if (p.type == 1):
@@ -519,10 +544,11 @@ class playgame:
                 pygame.draw.circle(screen, Color(255, 0, 255), (int(p.pos.x), int(p.pos.y)), 10)
 
             # update screen changes
+            pygame_widgets.update(events)
             display.update()
 
             # refresh rate
-            clock.tick(60)
+            clock.tick(10)
             self.client.move()
             # choose next edge
             # for agent in agents:
@@ -535,8 +561,9 @@ class playgame:
             #
             # client.move()
         # game over:
+
     #
-    def scale(self,data, min_screen, max_screen, min_data, max_data):
+    def scale(self, data, min_screen, max_screen, min_data, max_data):
         """
         get the scaled data with proportions min_data, max_data
         relative to min and max screen dimentions
@@ -545,15 +572,11 @@ class playgame:
 
         # decorate scale with the correct values
 
-    def my_scale(self,data,screen, min_x, max_x, min_y, max_y, x=False, y=False):
+    def my_scale(self, data, screen, min_x, max_x, min_y, max_y, x=False, y=False):
         if x:
             return self.scale(data, 50, screen.get_width() - 50, min_x, max_x)
         if y:
             return self.scale(data, 50, screen.get_height() - 50, min_y, max_y)
-
-
-
-
 
     # MOVE_FONT = pygame.font.SysFont('comicsans', 20)
     # radius = 15
@@ -568,11 +591,6 @@ class playgame:
     #     self.screen.blit(button_text, (self.button.rect.x + 20, self.button.rect.y + 10))
     #
     #
-
-
-
-
-
 
     # if __name__ == '__main__':
     #     game = playgame()
