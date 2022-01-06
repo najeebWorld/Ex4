@@ -1,13 +1,11 @@
 from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
-<<<<<<< HEAD
+
 from tkinter import *
 
 main_window=Tk()
 main_window.mainloop()
-=======
 
->>>>>>> 84f4e1505b969af294fb1239582eaa7d7923ed08
 
 def check():
     """

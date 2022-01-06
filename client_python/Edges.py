@@ -1,12 +1,11 @@
-
-
 class Edges:
 
     def __init__(self, s, d, w):
         self.src = s
         self.dest = d
         self.weight = w
-
+    #
+    # def __repr__(self):
 
     def getsrc(self):
          return self.src
