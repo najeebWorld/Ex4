@@ -107,7 +107,6 @@ class playgame:
                         timee=((((d2/d1)*weight))/speed)
                         # time.sleep(timee)
                         # del self.pokD[t_pok]
-                        # self.call_move(0.1)
                         # self.client.move()
                     else:
                         a1_src = a1.getPos()
@@ -119,7 +118,6 @@ class playgame:
                         # timee=(weight / speed)
                         # time.sleep(timee)
                         # self.client.move()
-                        # self.call_move(timee)
 
 
                 # if len(l) > 2:
@@ -175,6 +173,12 @@ class playgame:
             # self.client.move()
 
     def create_graph(self):
+
+        """
+        this function takes the json string and makes the objects Node and Edge that represent the graph
+        and then adds the nodes and edges to the graph dictionaries of nodeD and edgeD
+        """
+
         try:
             g = json.loads(self.client.get_graph())
             n = g["Nodes"]
@@ -191,6 +195,11 @@ class playgame:
             print(e)
 
     def add_pokemons(self):
+        """
+        this function takes the json string and makes the object Pokemon
+        and then adds the Pokemon to the dictionary pokD
+        """
+
         try:
             poke = json.loads(self.client.get_pokemons())
             outer = poke['Pokemons']
@@ -203,19 +212,19 @@ class playgame:
                 pos = (float(m[0]), float(m[1]), float(m[2]))
                 p1 = Pokemon(inner["type"], inner["value"], pos)
                 self.pokD[pos] = p1
-                # print("added po")
-
-            # print(a)
         except Exception as e:
             print(e)
 
     def add_agents(self):
+        """
+        this function takes the json string and makes the object Agent
+        and then adds the Agent to the dictionary agD
+        """
         try:
             ag = json.loads(self.client.get_agents())
             outer = ag['Agents']
             for a in outer:
                 inner = a['Agent']
-                # print(inner)
                 n = (inner['pos'])
                 n: cast(string, n)  # cast it to string
                 m = n.split(',')  # spliting to nodes
@@ -227,7 +236,6 @@ class playgame:
                 sp = inner['speed']
                 a1 = Agent(id, v, s, d, sp, pos)
                 self.agD[inner['id']] = a1
-                # print("added agent to d")
         except Exception as e:
             print(e)
 
@@ -368,23 +376,25 @@ class playgame:
         return small
 
     def find_distance(self, t1, t2) -> float:
+        # finds the distance between 2 points in a 2D surfice
         x = t1[0] - t2[0]
         y = t1[1] - t2[1]
         ans = math.sqrt(x * x + y * y)
-        # (cmath.sqrt((t1[0] - t2[0]) * (t1[0] - t2[0]) + (t1[1] - t2[1]) * (t1[1] - t2[1])))
         return ans
 
-    def find_closest_node(self, a: Agent) -> Node:
-        sd = float("inf")
-        close = None;
-        for n in self.graph.nodeD:
-            d1 = self.find_distance(self.graph.nodeD.grtpos(), a.getLoction())
-            if d1 < sd:
-                sd = d1
-                close = self.graph.nodeD.get(n)
-        a.setClosest(close)
 
     def find_correct_edge(self, p: Pokemon) -> Edges:
+        """
+        finds the edge that the pokemon is on
+        we will go through the edges in the graph till we find the correct one
+        we will calculate the distance from the ends of the edge =d1
+        we wll calculate the distance from the pokemon to each edge =d2+d3
+        if d1+eps>d2+d3>d1-eps than this is the correct edge we just need to check if this the correct type
+        we will do that by seeing if the dest-src had the same sign as the pokemon, if theye do they are a match
+        other wise the edge from dest to src is the correct edge
+        once we find the correct edge we will add the edge to the pokemon
+        """
+
         found = False
         eps = 0.00001
         for e in self.graph.edgeD:
@@ -409,6 +419,18 @@ class playgame:
                             p.setEdge(self.graph.edgeD.get(s))
 
     def attach_pokemon_agent(self):
+        """"
+        we will put all of the Agents into a list and do the same for the pokemons
+        we use 2 loops to try to connect the agents to the pokemons as best as possible.
+        the outer loop will go through the list of agents, the inner loop will gp through the list of pokemons
+        we will use digasktra to find the shortset path from where the agent is to the src of the edge that the pokemon is on
+        than we will take the distance between them and divide by the agents speed and than we will divide by the pokemons value,
+        all this will give us a small number we will find the lowest number and the agent will be paired with that pokemon.
+        this way the agent will go the pokemon that is relatively closest but that will also make the agents speed get higher faster.
+        we will take the list from the dijsktra and by the size of it we will decide what the dest of the agent should be.
+        than we will remove the pokemon from the list so that we don't have 2 agents going after the same pokemon
+
+        """
         p = []
         a = []
         for aa in self.agD:
@@ -466,119 +488,23 @@ class playgame:
 
 
 
-    # def run_Gui(self):
-    #
-    #     # init pygame
-    #     WIDTH, HEIGHT = 1080, 720
-    #
-    #     screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
-    #     clock = pygame.time.Clock()
-    #     pygame.font.init()
-    #
-    #     pokemons = self.client.get_pokemons()
-    #     pokemons_obj = json.loads(pokemons, object_hook=lambda d: SimpleNamespace(**d))
-    #
-    #     # print(pokemons)
-    #
-    #     graph_json = self.client.get_graph()
-    #
-    #     FONT = pygame.font.SysFont('Arial', 20, bold=True)
-    #     # load the json string into SimpleNamespace Object
-    #
-    #     graph = json.loads(graph_json, object_hook=lambda json_dict: SimpleNamespace(**json_dict))
-    #
-    #     for n in graph.Nodes:
-    #         x, y, _ = n.pos.split(',')
-    #         n.pos = SimpleNamespace(x=float(x), y=float(y))
-    #
-    #     # get data proportions
-    #     min_x = min(list(graph.Nodes), key=lambda n: n.pos.x).pos.x
-    #     min_y = min(list(graph.Nodes), key=lambda n: n.pos.y).pos.y
-    #     max_x = max(list(graph.Nodes), key=lambda n: n.pos.x).pos.x
-    #     max_y = max(list(graph.Nodes), key=lambda n: n.pos.y).pos.y
-    #
-    #     radius = 15
-    #
-    #     # button = Button(color=(0, 0, 0), rect=pygame.Rect((10, 10), (100, 50)))
-    #
-    #     MOVE_FONT = pygame.font.SysFont('comicsans', 20)
-    #     radius = 15
-    #     """
-    #     The code below should be improved significantly:
-    #     The GUI and the "algo" are mixed - refactoring using MVC design pattern is required.
-    #     """
-    #
-    #     # while client.is_running() == 'true':
-    #     pokemons = json.loads(self.client.get_pokemons(),
-    #                           object_hook=lambda d: SimpleNamespace(**d)).Pokemons
-    #     pokemons = [p.Pokemon for p in pokemons]
-    #     for p in pokemons:
-    #         x, y, _ = p.pos.split(',')
-    #         p.pos = SimpleNamespace(x=self.my_scale(float(x),screen, min_x,max_x,min_y,max_y, x=True), y=self.my_scale(float(y),screen, min_x,max_x,min_y,max_y, y=True))
-    #         agents = json.loads(self.client.get_agents(),object_hook=lambda d: SimpleNamespace(**d)).Agents
-    #         agents = [agent.Agent for agent in agents]
-    #     for a in agents:
-    #         x, y, _ = a.pos.split(',')
-    #         a.pos = SimpleNamespace(x=self.my_scale(float(x),screen, min_x,max_x,min_y,max_y, x=True), y=self.my_scale(float(y),screen, min_x,max_x,min_y,max_y, y=True))
-    #     # check events
-    #     for event in pygame.event.get():
-    #         if event.type == pygame.QUIT:
-    #              pygame.quit()
-    #              exit(0)
-    #
-    #     # refresh surface
-    #     screen.fill(Color(0, 0, 0))
-    #
-    #     # draw nodes
-    #     for n in graph.Nodes:
-    #         x = self.my_scale(n.pos.x, screen, min_x,max_x,min_y,max_y,x=True)
-    #         y = self.my_scale(n.pos.y,screen, min_x,max_x,min_y,max_y, y=True)
-    #
-    #     # its just to get a nice antialiased circle
-    #         gfxdraw.filled_circle(screen, int(x), int(y), radius, Color(64, 80, 174))
-    #         gfxdraw.aacircle(screen, int(x), int(y), radius, Color(255, 255, 255))
-    #
-    #         # draw the node id
-    #         id_srf = FONT.render(str(n.id), True, Color(255, 255, 255))
-    #         rect = id_srf.get_rect(center=(x, y))
-    #         screen.blit(id_srf, rect)
-    #
-    #         # draw edges
-    #     for e in graph.Edges:
-    #         # find the edge nodes
-    #         src = next(n for n in graph.Nodes if n.id == e.src)
-    #         dest = next(n for n in graph.Nodes if n.id == e.dest)
-    #
-    #         # scaled positions
-    #         src_x = self.my_scale(src.pos.x,screen, min_x,max_x,min_y,max_y, x=True)
-    #         src_y = self.my_scale(src.pos.y,screen, min_x,max_x,min_y,max_y, y=True)
-    #         dest_x = self.my_scale(dest.pos.x,screen, min_x,max_x,min_y,max_y, x=True)
-    #         dest_y = self.my_scale(dest.pos.y,screen, min_x,max_x,min_y,max_y, y=True)
-    #
-    #         # draw the line
-    #         pygame.draw.line(screen, Color(61, 72, 126),(src_x, src_y), (dest_x, dest_y))
-    #
-    #         # draw agents
-    #     for agent in agents:
-    #         pygame.draw.circle(screen, Color(122, 61, 23),(int(agent.pos.x), int(agent.pos.y)), 10)
-    #         # draw pokemons (note: should differ (GUI wise) between the up and the down pokemons (currently they are marked in the same way).
-    #     for p in pokemons:
-    #         if (p.type == 1):
-    #             pygame.draw.circle(screen, Color(0, 255, 255), (int(p.pos.x), int(p.pos.y)), 10)
-    #         else:
-    #             pygame.draw.circle(screen, Color(255, 0, 255), (int(p.pos.x), int(p.pos.y)), 10)
-    #
-    #         # update screen changes
-    #         display.update()
-    #
-    #         # refresh rate
-    #         clock.tick(10)
-    #         self.client.move()
-    #
+
+
+
 
 
     def run_Gui(self):
+        """"
+        this function will run the GUI
+        we will make simple objects for the nodes, edges,agents and pokemons
+        we will find the min and max x and y in the graph to make  a scalar for all the objects
+        we created in event for the end of the game that will stop it if you prees the x to close the window
+        and there is a button to press to end the game.
+        on the top of the of the GUI there is a counter for the mover and grade, and a count down for the time
+        we will plot all the objects on the graph than we will show it.
 
+
+        """
         # init pygame
         WIDTH, HEIGHT = 1080, 720
 
@@ -589,7 +515,6 @@ class playgame:
         pokemons = self.client.get_pokemons()
         pokemons_obj = json.loads(pokemons, object_hook=lambda d: SimpleNamespace(**d))
 
-        # print(pokemons)
 
         graph_json = self.client.get_graph()
 
@@ -645,8 +570,8 @@ class playgame:
         stopButton = Button(
             screen, 0, 0, 100, 40, text="press to stop",
             fontSize=20, margin=5,
-            inactiveColour=(255, 255, 255),
-            pressedColour=(70, 70, 70), radius=0,
+            inactiveColour=(255,0 ,0 ),
+            pressedColour=(0,0, 255), radius=0,
             onClick=lambda: self.client.stop()
         )
 
@@ -665,7 +590,7 @@ class playgame:
         font = pygame.font.SysFont("Arial", 20)
 
         textTime = font.render("time left: " + str(timeToLive),True,(255,255,255))
-        screen.blit(textTime, (100,0))
+        screen.blit(textTime, (120,0))
 
         textScore = font.render("score: " + str(score), True, (255, 255, 255))
         screen.blit(textScore, (400, 0))
@@ -709,7 +634,7 @@ class playgame:
             # draw agents
         for agent in agents:
             pygame.draw.circle(screen, Color(122, 61, 23), (int(agent.pos.x), int(agent.pos.y)), 10)
-            # draw pokemons (note: should differ (GUI wise) between the up and the down pokemons (currently they are marked in the same way).
+        # draw pokemons (note: should differ (GUI wise) between the up and the down pokemons (currently they are marked in the same way).
         for p in pokemons:
             if (p.type == 1):
                 pygame.draw.circle(screen, Color(0, 255, 255), (int(p.pos.x), int(p.pos.y)), 10)
@@ -737,6 +662,9 @@ class playgame:
         # decorate scale with the correct values
 
     def my_scale(self,data,screen, min_x, max_x, min_y, max_y, x=False, y=False):
+        """
+        gets a value and returns the changed value from the scaler
+        """
         if x:
             return self.scale(data, 50, screen.get_width() - 50, min_x, max_x)
         if y:
