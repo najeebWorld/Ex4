@@ -1,6 +1,9 @@
 from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
+from tkinter import *
 
+main_window=Tk()
+main_window.mainloop()
 
 def check():
     """
