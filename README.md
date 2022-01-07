@@ -30,6 +30,7 @@ the agent has an id, value src, dest , speed, (x,y,z) coordinance, and a pokemon
 
 #### play_game
 the calss play game has the algorithms and the GUI. the GUI is its own function in the calss so that the GUI and algorithm are intertwined as little as possible.
+<br> the atributes of this calss are graph, agD, pokD
 <br> this class has the function:
 <br>start game, create_graph, add_pokemon, add_agent, shortest_path, dijsktra, centerPoint,
 find_distance, find_correct_edge, attach_pokemon_agent, run_Gui, scale, my_sacle
