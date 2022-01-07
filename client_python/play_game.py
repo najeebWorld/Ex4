@@ -40,12 +40,25 @@ class playgame:
 
 
     def start_game(self) -> None:
+
+        """
+        we will start the client and get the graph.
+        we will find the center of teh graph and tell the server to start the agents on the center node.
+        we will start the client
+        while the client is running
+            we will clear pokD
+            we will run the gui
+            we will reload the pokemons and agents from the server
+            we will call the function attach_pokemon_gui
+            we will loop through the agents and tell them to change there dest
+            and we will print the client info
+        """
+
         # default port
         PORT = 6666
         # server host (default localhost 127.0.0.1)
         HOST = '127.0.0.1'
-        eps_dist = 0.0000001
-        eps_time = 0.01
+
 
 
 
@@ -65,18 +78,16 @@ class playgame:
         self.client.add_agent(center_text)
 
         self.client.start()
-        self.run_Gui()
+        # self.run_Gui()
         while self.client.is_running() == 'true':
             self.pokD.clear()
             self.run_Gui()
-            # if  self.client.is_running() == 'true':
             self.add_agents()
             self.add_pokemons()
 
-            # for p in self.pokD:
             self.attach_pokemon_agent()
-            print(self.pokD)
-            print(self.agD)
+            # print(self.pokD)
+            # print(self.agD)
             # print("attached all")
             for agent in self.agD:
                 a1 = self.agD[agent]
@@ -85,12 +96,12 @@ class playgame:
                 src1 = a1.getSrc()
                 dest1 = a1.getDest()
                 id = a1.getId()
-                speed = a1.getSpeed()
+               # speed = a1.getSpeed()
                 t1=(src1,dest1)
                 e = self.graph.edgeD.get(t1)
                 if e==None:
                     print("not an edge")
-                weight = e.getweight()
+               # weight = e.getweight()
                 self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest1) + '}')
                 ttl = self.client.time_to_end()
                 print(ttl, self.client.get_info())
@@ -616,13 +627,4 @@ class playgame:
 
 
 
-
-
-
-
-
-
-    # if __name__ == '__main__':
-    #     game = playgame()
-    #     start_game()
 
