@@ -6,6 +6,10 @@ In this project we had to create an algorithm that makes the agents collect the 
 <br> the object of the algorithm is to collect as many pokeemons as possible-get the highest grade, but to only call the function move upto 10 times per second.
 in this project we got the graph agents and pokemons from a server and created a GUI so that you can visualize what the algorithem is doing. 
 
+### how to run the project
+
+????????????????????/
+__________________________
 ### In this project we have 7 classes:
 
 #### node
