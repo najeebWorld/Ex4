@@ -65,4 +65,7 @@ _______________________________
 |15   |565  |250  |   4    | 1    |
 
 
+-------------------------------
+here is the UML of the project
 
+![uml](https://github.com/najeebWorld/Ex4/blob/master/uml%20ex4.png)
