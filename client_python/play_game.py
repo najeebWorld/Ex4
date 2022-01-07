@@ -96,12 +96,12 @@ class playgame:
                 src1 = a1.getSrc()
                 dest1 = a1.getDest()
                 id = a1.getId()
-               # speed = a1.getSpeed()
+                # speed = a1.getSpeed()
                 t1=(src1,dest1)
                 e = self.graph.edgeD.get(t1)
                 if e==None:
                     print("not an edge")
-               # weight = e.getweight()
+                # weight = e.getweight()
                 self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest1) + '}')
                 ttl = self.client.time_to_end()
                 print(ttl, self.client.get_info())
@@ -627,4 +627,6 @@ class playgame:
 
 
 
-
+if __name__ == '__main__':
+    game= playgame()
+    main = playgame.start_game(game)
