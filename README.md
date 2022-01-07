@@ -10,7 +10,7 @@ in this project we got the graph agents and pokemons from a server and created a
 
 ????????????????????/
 __________________________
-### In this project we have 7 classes:
+### In this project we have 8 classes:
 
 #### node
 the node has a (x,y,z) coordinance Id, Tag and Dictionaries.
@@ -40,6 +40,8 @@ the calss play game has the algorithms and the GUI. the GUI is its own function 
 find_distance, find_correct_edge, attach_pokemon_agent, run_Gui, scale, my_sacle
 <br>in the wiki there wwill be an explantion for all the functions
 
+#### main
+this class runs the function start_game
 _______________________________
 
 ###  Here are our results
