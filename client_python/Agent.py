@@ -7,7 +7,7 @@ class Agent:
         self.dest =d
         self.speed = sp
         self.geo = g
-        self.list = None
+        # self.list = None
         self.pok = None
 
 
@@ -20,11 +20,11 @@ class Agent:
         g1 = str(self.geo[0])
         g2 = str(self.geo[1])
         g3 = str(self.geo[2])
-        l=str(self.list)
+        # l=str(self.list)
         p=str(self.pok)
 
-
-        return " Agent = id: "+i+" value: "+v+" src: " +s+" dest: "+d+" speed: "+sp +" geo: ("+g1+","+g2+","+g3+")"+" list: "+l+" pok: "+p
+        # list: "+l+
+        return " Agent = id: "+i+" value: "+v+" src: " +s+" dest: "+d+" speed: "+sp +" geo: ("+g1+","+g2+","+g3+")"+" pok: "+p
 
     def getId(self):
         return self.id
@@ -44,11 +44,11 @@ class Agent:
     # def setClosest(self, n):
     #     self.closes t =n
 
-    def getList(self):
-        return self.list
-
-    def setList(self ,l):
-        self.list = l
+    # def getList(self):
+    #     return self.list
+    #
+    # def setList(self ,l):
+    #     self.list = l
 
     def getPok(self):
         return self.pok

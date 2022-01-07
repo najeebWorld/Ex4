@@ -94,83 +94,26 @@ class playgame:
                 self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest1) + '}')
                 ttl = self.client.time_to_end()
                 print(ttl, self.client.get_info())
-                if a1.getPok() != None:
-                    if a1.getPok().getEdge() == e:
-                        node_src = self.graph.nodeD.get(e.getsrc())
-                        node_dest = self.graph.nodeD.get(e.getdest())
-                        pok = a1.getPok()
-                        t_pok = pok.getPos()
-                        a1_src = a1.getPos()
-                        t_dest = node_dest.getPos()
-                        d1 = self.find_distance(a1_src, t_dest)
-                        d2 = self.find_distance(a1_src, t_pok)
-                        timee=((((d2/d1)*weight))/speed)
-                        # time.sleep(timee)
-                        # del self.pokD[t_pok]
-                        # self.client.move()
-                    else:
-                        a1_src = a1.getPos()
-                        a1_d=a1.getDest()
-                        a1_dest=self.graph.nodeD.get(a1_d).getPos()
-                        d1=self.find_distance(a1_src, a1_dest)
-                        timee=(d1*weight)/speed
-
-                        # timee=(weight / speed)
-                        # time.sleep(timee)
-                        # self.client.move()
+                # if a1.getPok() != None:
+                #     if a1.getPok().getEdge() == e:
+                #         node_src = self.graph.nodeD.get(e.getsrc())
+                #         node_dest = self.graph.nodeD.get(e.getdest())
+                #         pok = a1.getPok()
+                #         t_pok = pok.getPos()
+                #         a1_src = a1.getPos()
+                #         t_dest = node_dest.getPos()
+                #         d1 = self.find_distance(a1_src, t_dest)
+                #         d2 = self.find_distance(a1_src, t_pok)
+                #         timee=((((d2/d1)*weight))/speed)
+                #     else:
+                #         a1_src = a1.getPos()
+                #         a1_d=a1.getDest()
+                #         a1_dest=self.graph.nodeD.get(a1_d).getPos()
+                #         d1=self.find_distance(a1_src, a1_dest)
+                #         timee=(d1*weight)/speed
 
 
-                # if len(l) > 2:
-                #     dest =a1.getDest()
-                #     # del l[0]
-                #     # a1.setList(l)
-                #     t1 = (l0, dest)
-                #     e = self.graph.edgeD.get(t1)
-                #     weight = e.getweight()
-                #     print(dest)
-                #     self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest) + '}')
-                #     ttl = self.client.time_to_end()
-                #     print(ttl, self.client.get_info())
-                #     timee=(weight / speed)-eps_dist
-                #     time.sleep(timee)
-                #     self.client.move()
-                # elif len(l) == 2:
-                #     t1 = (l[0], l[1])
-                #     dest = a1.getDest()
-                #     print(dest)
-                #     e = self.graph.edgeD.get(t1)
-                #     w = e.getweight()
-                #     node_src = self.graph.nodeD.get(e.getsrc())
-                #     node_dest = self.graph.nodeD.get(e.getdest())
-                #     pok = a1.getPok()
-                #     t_pok = pok.getPos()
-                #     t_src = node_src.getPos()
-                #     t_dest = node_dest.getPos()
-                #     d1 = self.find_distance(t_src, t_dest)
-                #     d2 = self.find_distance(t_src, t_pok)
-                #     timee=((((d2/d1)*w)-eps_dist)/speed)
-                #     self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest) + '}')
-                #     ttl = self.client.time_to_end()
-                #     print(ttl, self.client.get_info())
-                #     time.sleep(timee)
-                #     self.client.move()
-                # else:
-                #     self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(l0) + '}')
-                #     ttl = self.client.time_to_end()
-                #     print(ttl, self.client.get_info())
-                #     time.sleep(0.1)
-                #     self.client.move()
-                # # self.client.move()
 
-            # for agent in self.agD:
-            #     a1 = self.agD[agent]
-            #     if a1.getDest() == -1:
-            #         next_node = (a1.getSrc() - 1) % len(self.graph.nodeD)
-            #         self.client.choose_next_edge('{"agent_id":' + str(a1.getId()) + ', "next_node_id":' + str(next_node) + '}')
-            #         ttl = self.client.time_to_end()
-            #         print(ttl, self.client.get_info())
-            #
-            # self.client.move()
 
     def create_graph(self):
 
@@ -435,9 +378,9 @@ class playgame:
         a = []
         for aa in self.agD:
             a1 = self.agD.get(aa)
-            l = a1.getList()
-            if a1.getList() == None:  # isn't chasing a pokemon
-                a.append(a1)
+            # l = a1.getList()
+            # if a1.getList() == None:  # isn't chasing a pokemon
+            a.append(a1)
 
         for pp in self.pokD:
             p1 = self.pokD.get(pp)
