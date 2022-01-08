@@ -78,7 +78,6 @@ class playgame:
         self.client.add_agent(center_text)
 
         self.client.start()
-        # self.run_Gui()
         while self.client.is_running() == 'true':
             self.pokD.clear()
             self.run_Gui()
@@ -86,42 +85,20 @@ class playgame:
             self.add_pokemons()
 
             self.attach_pokemon_agent()
-            # print(self.pokD)
-            # print(self.agD)
-            # print("attached all")
             for agent in self.agD:
                 a1 = self.agD[agent]
-                # l = a1.getList()
-                # l0 = l[0]
+
                 src1 = a1.getSrc()
                 dest1 = a1.getDest()
                 id = a1.getId()
-                # speed = a1.getSpeed()
                 t1=(src1,dest1)
                 e = self.graph.edgeD.get(t1)
                 if e==None:
                     print("not an edge")
-                # weight = e.getweight()
                 self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest1) + '}')
                 ttl = self.client.time_to_end()
                 print(ttl, self.client.get_info())
-                # if a1.getPok() != None:
-                #     if a1.getPok().getEdge() == e:
-                #         node_src = self.graph.nodeD.get(e.getsrc())
-                #         node_dest = self.graph.nodeD.get(e.getdest())
-                #         pok = a1.getPok()
-                #         t_pok = pok.getPos()
-                #         a1_src = a1.getPos()
-                #         t_dest = node_dest.getPos()
-                #         d1 = self.find_distance(a1_src, t_dest)
-                #         d2 = self.find_distance(a1_src, t_pok)
-                #         timee=((((d2/d1)*weight))/speed)
-                #     else:
-                #         a1_src = a1.getPos()
-                #         a1_d=a1.getDest()
-                #         a1_dest=self.graph.nodeD.get(a1_d).getPos()
-                #         d1=self.find_distance(a1_src, a1_dest)
-                #         timee=(d1*weight)/speed
+
 
 
 
@@ -399,16 +376,6 @@ class playgame:
             p.append(p1)
 
 
-        # for i in range(0, len(p)):
-        #     spot = -1
-        #     short1=float("inf")
-        #     for j in range(0, len(a)):
-        #         d = self.shortest_path(a[j].getSrc(), p[i].getEdge().getsrc())
-        #         time=d[0]/a[j].getSpeed()
-        #         if time < short1:
-        #             short1 = time
-        #             spot = j
-        #             l = d[1]
         for j in range(0,len(a)):
             spot = -1
             short1 = float("inf")
@@ -423,16 +390,16 @@ class playgame:
 
             if spot >= 0 and spot < len(p):
                 if len(l) == 0:
-                    list1=l
+                    # list1=l
                     a[j].setDest(p[spot].getEdge().getdest())
                 elif len(l) == 1 :
-                    list2=l
+                    # list2=l
                     a[j].setDest(p[spot].getEdge().getdest())
                 elif len(l) == 2:
-                    list3 = l
+                    # list3 = l
                     a[j].setDest(l[1])
                 else:
-                    list=l
+                    # list=l
                     a[j].setDest(l[1])
                 a[j].setPok(p[spot])
                 del p[spot]
@@ -626,7 +593,7 @@ class playgame:
 
 
 
-
-if __name__ == '__main__':
-    game= playgame()
-    main = playgame.start_game(game)
+#
+# if __name__ == '__main__':
+#     game= playgame()
+#     main = playgame.start_game(game)
