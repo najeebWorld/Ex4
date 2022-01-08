@@ -390,16 +390,12 @@ class playgame:
 
             if spot >= 0 and spot < len(p):
                 if len(l) == 0:
-                    # list1=l
                     a[j].setDest(p[spot].getEdge().getdest())
                 elif len(l) == 1 :
-                    # list2=l
                     a[j].setDest(p[spot].getEdge().getdest())
                 elif len(l) == 2:
-                    # list3 = l
                     a[j].setDest(l[1])
                 else:
-                    # list=l
                     a[j].setDest(l[1])
                 a[j].setPok(p[spot])
                 del p[spot]
@@ -593,7 +589,4 @@ class playgame:
 
 
 
-#
-# if __name__ == '__main__':
-#     game= playgame()
-#     main = playgame.start_game(game)
+
