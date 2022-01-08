@@ -1,3 +1,4 @@
+
 class Agent:
     def __init__(self, id, v, s, d, sp, g):
         self.id  =id
@@ -6,7 +7,6 @@ class Agent:
         self.dest =d
         self.speed = sp
         self.geo = g
-        self.list = None
         self.pok = None
 
 
@@ -19,11 +19,9 @@ class Agent:
         g1 = str(self.geo[0])
         g2 = str(self.geo[1])
         g3 = str(self.geo[2])
-        l=str(self.list)
         p=str(self.pok)
 
-
-        return " Agent = id: "+i+" value: "+v+" src: " +s+" dest: "+d+" speed: "+sp +" geo: ("+g1+","+g2+","+g3+")"+" list: "+l+" pok: "+p
+        return " Agent = id: "+i+" value: "+v+" src: " +s+" dest: "+d+" speed: "+sp +" geo: ("+g1+","+g2+","+g3+")"+" pok: "+p
 
     def getId(self):
         return self.id
@@ -37,17 +35,6 @@ class Agent:
     def setPos(self, pos):
         self.geo =pos
 
-    # def getClosest(self):
-    #     return self.closest
-    #
-    # def setClosest(self, n):
-    #     self.closes t =n
-
-    def getList(self):
-        return self.list
-
-    def setList(self ,l):
-        self.list = l
 
     def getPok(self):
         return self.pok
