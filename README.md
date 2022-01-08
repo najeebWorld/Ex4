@@ -8,7 +8,18 @@ in this project we got the graph agents and pokemons from a server and created a
 
 ### how to run the project
 
-????????????????????/
+<br>First you will need to make sure that you have python downloaded on your computer.
+<br>If it isnt downloaded here is the link to download:
+<br>python: https://www.python.org/downloads/
+<br>then you will need to check if you have pygame and pygame widgets downloaded.
+<br> to check if pygame is downlaoded on your computer run this in powerShell as the administrater "python3 -m pygame.examples.aliens" or "python -m pygame.examples.aliens"
+<br> to check if pygame widgets is downloaded write "import pygame_widgets" in your python IDE and make sure that it is reconized.
+<br> to download pygame run in your IDE's terminal 'python3 -m pip install -U pygame --user"
+<br> to download pygame widgets run in your IDE's terminal "python -m pip install pygame-widgets"
+<br>Now that you have everything installed, you can download the project or clone the project or download the release.
+<br>open up the project in pycharm or another python IDE
+<br> in the python terminal run this "java -jar Ex4_Server_v0.0.jar 0" (you can change the last 0 to any number from 0 to 15)
+<br> and run the main. 
 __________________________
 ### In this project we have 8 classes:
 
