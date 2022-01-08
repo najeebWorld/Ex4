@@ -1,3 +1,5 @@
+
+
 class Pokemon:
     def __init__(self, t,v,pos):
         self.type=t
@@ -28,3 +30,4 @@ class Pokemon:
 
     def setEdge(self,e):
         self.edge=e
+

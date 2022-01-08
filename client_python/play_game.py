@@ -14,8 +14,6 @@ import math
 import time
 
 
-
-
 from client_python.DiGraph import DiGraph
 from client_python.GraphInterface import GraphInterface
 from client_python import client
@@ -34,7 +32,7 @@ class playgame:
 
     def __init__(self, g: DiGraph = None):
         if g == None:
-             g = DiGraph()
+            g = DiGraph()
         self.graph = g
         self.pokD = dict()
         self.agD = dict()
@@ -42,12 +40,25 @@ class playgame:
 
 
     def start_game(self) -> None:
+
+        """
+        we will start the client and get the graph.
+        we will find the center of teh graph and tell the server to start the agents on the center node.
+        we will start the client
+        while the client is running
+            we will clear pokD
+            we will run the gui
+            we will reload the pokemons and agents from the server
+            we will call the function attach_pokemon_gui
+            we will loop through the agents and tell them to change there dest
+            and we will print the client info
+        """
+
         # default port
         PORT = 6666
         # server host (default localhost 127.0.0.1)
         HOST = '127.0.0.1'
-        eps_dist = 0.0000001
-        eps_time = 0.01
+
 
 
 
@@ -67,52 +78,27 @@ class playgame:
         self.client.add_agent(center_text)
 
         self.client.start()
-        self.run_Gui()
         while self.client.is_running() == 'true':
             self.pokD.clear()
             self.run_Gui()
-            # if  self.client.is_running() == 'true':
             self.add_agents()
             self.add_pokemons()
 
-            # for p in self.pokD:
             self.attach_pokemon_agent()
-            print(self.pokD)
-            print(self.agD)
-            # print("attached all")
             for agent in self.agD:
                 a1 = self.agD[agent]
-                # l = a1.getList()
-                # l0 = l[0]
+
                 src1 = a1.getSrc()
                 dest1 = a1.getDest()
                 id = a1.getId()
-                speed = a1.getSpeed()
                 t1=(src1,dest1)
                 e = self.graph.edgeD.get(t1)
                 if e==None:
                     print("not an edge")
-                weight = e.getweight()
                 self.client.choose_next_edge('{"agent_id":' + str(id) + ', "next_node_id":' + str(dest1) + '}')
                 ttl = self.client.time_to_end()
                 print(ttl, self.client.get_info())
-                # if a1.getPok() != None:
-                #     if a1.getPok().getEdge() == e:
-                #         node_src = self.graph.nodeD.get(e.getsrc())
-                #         node_dest = self.graph.nodeD.get(e.getdest())
-                #         pok = a1.getPok()
-                #         t_pok = pok.getPos()
-                #         a1_src = a1.getPos()
-                #         t_dest = node_dest.getPos()
-                #         d1 = self.find_distance(a1_src, t_dest)
-                #         d2 = self.find_distance(a1_src, t_pok)
-                #         timee=((((d2/d1)*weight))/speed)
-                #     else:
-                #         a1_src = a1.getPos()
-                #         a1_d=a1.getDest()
-                #         a1_dest=self.graph.nodeD.get(a1_d).getPos()
-                #         d1=self.find_distance(a1_src, a1_dest)
-                #         timee=(d1*weight)/speed
+
 
 
 
@@ -374,6 +360,7 @@ class playgame:
         this way the agent will go the pokemon that is relatively closest but that will also make the agents speed get higher faster.
         we will take the list from the dijsktra and by the size of it we will decide what the dest of the agent should be.
         than we will remove the pokemon from the list so that we don't have 2 agents going after the same pokemon
+
         """
         p = []
         a = []
@@ -389,16 +376,6 @@ class playgame:
             p.append(p1)
 
 
-        # for i in range(0, len(p)):
-        #     spot = -1
-        #     short1=float("inf")
-        #     for j in range(0, len(a)):
-        #         d = self.shortest_path(a[j].getSrc(), p[i].getEdge().getsrc())
-        #         time=d[0]/a[j].getSpeed()
-        #         if time < short1:
-        #             short1 = time
-        #             spot = j
-        #             l = d[1]
         for j in range(0,len(a)):
             spot = -1
             short1 = float("inf")
@@ -413,16 +390,12 @@ class playgame:
 
             if spot >= 0 and spot < len(p):
                 if len(l) == 0:
-                    list1=l
                     a[j].setDest(p[spot].getEdge().getdest())
                 elif len(l) == 1 :
-                    list2=l
                     a[j].setDest(p[spot].getEdge().getdest())
                 elif len(l) == 2:
-                    list3 = l
                     a[j].setDest(l[1])
                 else:
-                    list=l
                     a[j].setDest(l[1])
                 a[j].setPok(p[spot])
                 del p[spot]
@@ -438,8 +411,6 @@ class playgame:
 
 
     def run_Gui(self):
-
-
         """"
         this function will run the GUI
         we will make simple objects for the nodes, edges,agents and pokemons
@@ -448,6 +419,8 @@ class playgame:
         and there is a button to press to end the game.
         on the top of the of the GUI there is a counter for the mover and grade, and a count down for the time
         we will plot all the objects on the graph than we will show it.
+
+
         """
         # init pygame
         WIDTH, HEIGHT = 1080, 720
@@ -521,7 +494,6 @@ class playgame:
 
         # refresh surface
         screen.fill(Color(0, 0, 0))
-
 
 
         # add moves, time and score to screen
@@ -618,12 +590,3 @@ class playgame:
 
 
 
-
-
-
-
-
-
-    # if __name__ == '__main__':
-    #     game = playgame()
-    #     start_game()
