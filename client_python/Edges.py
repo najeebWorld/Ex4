@@ -1,3 +1,5 @@
+
+
 class Edges:
 
     def __init__(self, s, d, w):
