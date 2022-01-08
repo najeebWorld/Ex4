@@ -70,7 +70,7 @@ here is the UML of the project
 
 ![uml](https://github.com/najeebWorld/Ex4/blob/master/uml%20ex4.png)
 
+_____________________________
+here is the a video of case 0
 
-here is the Video:
-
-![gif]()
+![gif](https://github.com/najeebWorld/Ex4/blob/master/final_61d9c9f90cab430105a290c5_594828.gif)
